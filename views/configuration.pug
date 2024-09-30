@@ -1,0 +1,144 @@
+include ./common/layout
+include ./common/new_modal
+include ./common/new_form
+include ./common/pagination-css
+section.header
+  include ./common/header
+section.main
+  include ./common/nav-bar
+  .main--container
+    div.add_button
+      .row
+        .col-md-3
+          .form-group.focused
+            label(for='searchOrganizationCode') Select Organization:
+            select#searchOrganizationCode(name='organization' class='custom-select form-control' onchange='qmSearchOrganizationCode(event, searchProductCode)')
+              option(value='') -----Select Organization-----
+              each option in organization
+                option(value=option._id)= option.organization_name
+        .col-md-3
+          .form-group.focused
+            label(for='searchProductCode') Select Product:
+            select#searchProductCode(name='product' class='custom-select form-control')
+              option(value='') -----Select Product-----
+        .col-md-2
+          button(type='button' id='searchQuestion' onclick='loadConfigurations()')
+            | Search
+        .col-md-2
+          button(type='button' id='openQuestionModel' onclick='openConfig()')
+            | ADD Configuration
+    .table
+      .section--title
+        div
+          table
+            thead
+              tr
+                th S.No
+                th Organization Code
+                th Product Code
+                th Bot ID
+                th Api Key
+                th Edit
+                th Delete
+            tbody(id="configuration-table")
+              if products.length > 0
+                each data, index in products
+                  tr
+                    td= index + 1
+                    td= data.organization_code
+                    td= data.product_code
+                    td= data.bot_id
+                    td= data.api_key
+                    td(style=`color: ${data.status == '1' ? 'green' : 'red'}`) #{(data.status == '1' ? 'Active' : 'InActive' )}
+                    td
+                      div
+                        span.options
+                          i.fas.fa-edit(onclick=`configurationEditPopup('${JSON.stringify(data)}')`)
+                    td
+                      div
+                        span.options
+                          i.fas.fa-trash-alt(onclick=`configurationInfo('${data._id}', 'delete')`)
+              else
+                td(colspan="9" style="text-align:center") No Data Found
+    div#pagination
+      if totalPages > 0 
+        nav(data-pagination='')
+          a(href=`/configuration?page=${currentPage - 1}`) Previous
+            i.ion-chevron-left
+          ul
+            each page in Array.from(Array(totalPages).keys()).map(i => i + 1)
+              li.current(class=page === currentPage ? 'active' : '')
+                a(href=`/configuration?page=${page}`)= page
+          if currentPage < totalPages
+            a(href=`/configuration?page=${currentPage + 1}`) Next
+              i.ion-chevron-right
+    #openConfigAddModal.modal.fade.modal-align-mobile-bottom.show(style='display: none;')
+      .modal-dialog.modal-dialog-lg.modal-dialog-center
+        .modal-content
+          .modal-header
+            button.modal-close(type='button' id='closePopup1' onclick='closePopUp(openConfigAddModal)')
+              span.sr-only close
+          .modal-body
+            form(id="form-question")
+              div#step-1-form.step-1-form
+                h2.heading-xlarge.text-center Configuration Details
+                br  
+                .mobile-scroll-popup
+                  .row
+                    .col-md-6
+                      .form-group.focused
+                        label(for='organizationCode') Select Organization:
+                        select#organizationCode(name='dropdown' class="form-control" onchange='qmSearchOrganizationCode(event, productCode)')
+                          option(value='') -----Select Organization-----
+                          each option in organization
+                            option(value=option._id)= option.organization_name
+                    .col-md-6
+                      .form-group.focused
+                        label(for='productCode') Select Product:
+                        select#productCode(name='dropdown' class="form-control")
+                          option(value="") -----Select Product-----
+                    .col-md-6
+                      .form-group.focused
+                        label(for='session_key_name') Session Key Name:
+                        input#sessionKeyName(type='text' name='session_key_name'  required='' class="form-control")
+                  .row.button_qa_custom_two
+                    .button_custom_two
+                      button.button.button--large.button--blue.button--mobile(type='button', id='configDetails', onclick='submitConfigDetails()')
+                        span Continue
+    #editConfigModal.modal.fade.modal-align-mobile-bottom.show(style='display: none;')
+      .modal-dialog.modal-dialog-lg.modal-dialog-center
+        .modal-content
+          .modal-header
+            button.modal-close(type='button' id='closePopup1' onclick='closePopUp(editConfigModal)')
+              span.sr-only close
+          .modal-body
+            form(id="form-question")
+              div#step-1-form.step-1-form
+                h2.heading-xlarge.text-center Edit Product Details
+                br  
+                .mobile-scroll-popup
+                  .row
+                    .col-md-6
+                      .form-group.focused 
+                        label(for='editOrganizationCode') Select Organization:
+                        input#editOrganizationCode(type='text' name='edit_organization_code' required='' class="form-control" disabled=true)
+                    .col-md-6
+                      .form-group.focused
+                        label(for='editProductCode') Product Code:
+                        input#editProductCode(type='text' name='edit_product_code' required='' class="form-control" disabled=true)
+                    .col-md-6
+                      .form-group.focused
+                        label(for='editSessionKey') Session Key Name:
+                        input#editSessionKey(type='text' name='edit_session_key'  required='' class="form-control")
+                    .col-md-6
+                      .form-group.focused 
+                        label(for='configStatus') Select Status:
+                        select#configStatus(name='status' class='custom-select form-control')
+                          option(value="1")= "Active"
+                          option(value="0")= "InActive"
+                  .row.button_qa_custom_two
+                    .button_custom_two
+                      button.button.button--large.button--blue.button--mobile(type='button', id='editProductDetail', onclick='editConfigDetails()')
+                        span Continue
+script(src='cms/main.js')
+

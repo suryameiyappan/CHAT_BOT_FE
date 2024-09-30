@@ -1,0 +1,67 @@
+include ./common/layout
+include ./common/new_modal
+include ./common/new_form
+include ./common/pagination-css
+section.header
+  include ./common/header
+section.main
+  include ./common/nav-bar
+  .main--container
+    div.add_button
+      .row
+        .col-md-3
+          .form-group.focused
+              label(for='qmSearchOrganizationCode') Select Organization:
+              select#qmSearchOrganizationCode(name='dropdown' class="form-control" onchange='qmSearchOrganizationCode(event, qmSearchProductCode)')
+                option(value='') -----Select Organization-----
+                each option in organization
+                  option(value=option._id)= option.organization_name
+        .col-md-3
+          .form-group.focused
+            label(for='qmSearchProductCode') Select Product:
+            select#qmSearchProductCode(name='dropdown' class="form-control")
+              option(value='') -----Select Product-----
+        .col-md-2
+            button(type='button' id='searchQuestionMapping' onclick='searchQuestionMapping()')
+              | Search
+    .cards 
+      h2(style="text-align:center")  no records found
+    div#pagination
+    #OpenQaMapping.modal.fade.modal-align-mobile-bottom.show(style='display: none;')
+      .modal-dialog.modal-dialog-sm.modal-dialog-center
+        .modal-content
+          .modal-header
+            button.modal-close(type='button' id='closeQaMap' onclick='closePopUp(OpenQaMapping)')
+              span.sr-only close
+          .modal-body
+            form(id="form-question")
+              div#step-1-form.step-1-form
+                h2.heading-xlarge.text-center Question Code
+                br  
+                .mobile-scroll-popup
+                  .row.question_add
+                    .col-md-6
+                      .form-group.focused
+                        label(for='QaCode') question code:
+                        input#QaCode(type='text' name='QaCode' class="form-control")
+                    .col-md-6#mapping_qa_next
+                      .form-group.focused
+                        label(for='NextQaCode') Next question code:
+                        input#NextQaCode(type='text' name='NextQaCode' class="form-control")
+                  .row.button_submit
+                    .col-md-6.text-center
+                      button.button.button--large.button--blue.button--mobile(type='button', id='updateQcode', onclick='updateQuestionCode()')
+                        span Continue
+    #openQuestionText.modal.fade.modal-align-mobile-bottom.show(style='display: none;')
+      .modal-dialog.modal-dialog-lg.modal-dialog-center
+        .modal-content
+          .modal-header
+            button.modal-close(type='button' id='closePopup2' onclick='closePopUp(openQuestionText)')
+              span.sr-only close
+          .modal-body
+            div#question-show
+              h2#question_text.heading-xlarge.text-center
+              br
+            div#question-options
+              h2#question-option-txt.heading-xlarge.text-center
+script(src='/cms/main.js')

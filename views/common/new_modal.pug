@@ -1,0 +1,237 @@
+style.
+ .modal {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1060;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0
+ }
+
+ .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+ }
+
+ .modal-dialog {
+    width: 95%;
+    max-width: 650px;
+    margin: 1rem auto;
+    pointer-events: none;
+    position: relative
+ }
+
+ @media (min-width: 768px) {
+    .modal-dialog-sm {
+        max-width:500px
+    }
+ }
+
+ @media (min-width: 768px) {
+    .modal-dialog-md {
+        max-width:700px
+    }
+ }
+
+ @media (min-width: 768px) {
+        .modal-dialog-lg {
+            max-width:800px
+        }
+ }
+
+ @media (min-width: 768px) {
+        .modal-dialog-xl {
+            max-width:1000px
+        }
+ }
+
+ @media (min-width: 768px) {
+        .modal-dialog-xxl {
+            max-width:1200px
+        }
+ }
+
+ .modal-dialog-center {
+        display: flex;
+        align-items: center;
+        min-height: calc(100% - 1rem)
+ }
+
+ @media (min-width: 768px) {
+        .modal-dialog-center {
+            min-height:calc(100% - 2rem)
+        }
+ }
+
+ .modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border-radius: 0;
+    outline: 0
+ }
+
+ .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between
+ }
+
+ .modal-close {
+        box-sizing: content-box;
+        width: 14px;
+        height: 14px;
+        background: transparent url(/cms/image/close-model.svg) center/1rem auto no-repeat;
+        border: 0;
+        cursor: pointer;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 99
+ }
+
+    @media (min-width: 768px) {
+        .modal-close {
+            width:17px;
+            height: 18px
+        }
+    }
+
+    .modal-body {
+        position: relative;
+        flex: 1 1 auto;
+        padding: 30px 15px
+    }
+
+    @media (min-width: 768px) {
+        .modal-body {
+            padding:40px
+        }
+    }
+
+    @media (min-width: 1680px) {
+        .modal-body {
+            padding:50px
+        }
+    }
+
+    .modal-backdrop {
+        position: relative  ;
+        top: 0;
+        left: 0;
+        z-index: 1040;
+        width: 100vw;
+        height: 100vh;
+        background-color: #000
+    }
+
+    .modal-backdrop.fade {
+        opacity: 0
+    }
+
+    .modal-backdrop.show {
+        opacity: .5
+    }
+
+    .modal-open {
+        overflow: hidden
+    }
+
+    @media (min-width: 1024px) {
+        .modal-dialog-video {
+            max-width:970px
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .modal-dialog-video {
+            max-width:1000px
+        }
+    }
+
+    @media (min-width: 1680px) {
+        .modal-dialog-video {
+            max-width:1130px
+        }
+    }
+
+    .modal-dialog-video .modal-close {
+        background-image: url(/cms/image/close-white.svg);
+        padding: 0;
+        right: 0
+    }
+
+    .modal-dialog-video .modal-content {
+        background: transparent
+    }
+
+    .modal-dialog-video .modal-header {
+        padding: 25px 0
+    }
+
+    .modal-dialog-video .modal-body {
+        padding: 0
+    }
+
+    .modal.fade .modal-dialog {
+        transition: transform .3s ease-out;
+        transform: translateY(-50px)
+    }
+
+    .modal.show .modal-dialog {
+        transform: none
+    }
+
+    @media (max-width: 767px) {
+        .modal-align-mobile-bottom .modal-dialog {
+            width:100%;
+            margin: 0 auto
+        }
+
+        .modal-align-mobile-bottom .modal-center {
+            min-height: initial
+        }
+
+        .modal-align-mobile-bottom .modal-content {
+            max-height: 75%;
+            border-radius: 24px 24px 0 0;
+            transition: all .6s ease;
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            right: 0;
+            z-index: 999
+        }
+
+        .modal-align-mobile-bottom .modal-header {
+            min-height: 40px
+        }
+
+        .modal-align-mobile-bottom .modal-body {
+            max-height: 65%;
+            padding: 0 30px 40px;
+            overflow-y: scroll
+        }
+
+        .modal-align-mobile-bottom.fade .modal-dialog {
+            transform: none
+        }
+
+        .modal-align-mobile-bottom.modal-up-animate .modal-content {
+            bottom: -5px
+        }
+    }

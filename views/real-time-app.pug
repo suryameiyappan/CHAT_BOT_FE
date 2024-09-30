@@ -1,0 +1,27 @@
+doctype html
+head
+  title Pusher Test
+  script(src='https://js.pusher.com/8.2.0/pusher.min.js')
+  script.
+    Pusher.logToConsole = true;
+    var pusher = new Pusher('9c2629abf4b7a840f63b', {
+      cluster: 'mt1'
+    });
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      const response = JSON.stringify(data);
+      const array = JSON.parse(response);
+      const loadData = document.getElementById('load-data');
+      const valueH3 = document.createElement('h3');
+      valueH3.className = 'card--value';
+      valueH3.textContent = array.message.username;
+      loadData.appendChild(valueH3);
+    });
+h1 Pusher Test
+p
+  | Try publishing an event to channel 
+  code my-channel
+  |     with event name 
+  code my-event
+  | .
+div#load-data

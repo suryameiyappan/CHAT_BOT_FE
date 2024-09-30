@@ -1,0 +1,117 @@
+include ./common/layout
+include ./common/new_modal
+include ./common/new_form
+include ./common/pagination-css
+section.header
+  include ./common/header
+section.main
+  include ./common/nav-bar
+  .main--container
+    div.add_button
+      .row
+        .col-md-3
+          .form-group.focused
+            label(for='searchOrganization') Search Organization:
+            input#searchOrganization(type='text' name='organization' class="form-control")
+        .col-md-2
+          button(type='button' id='searchQuestion' onclick='searchOrganization()')
+            | Search
+        .col-md-2
+          button(type='button' id='openModel' onclick="organizationCreatePopup()")
+            | ADD ORGANIZATION
+    .table
+      .section--title
+        table
+          thead
+            tr
+              th S.No
+              th Organization Code
+              th Organization Name
+              th Status
+              th Edit
+              th Delete
+          tbody(id="organization-table")
+            if resData.organization.organization.length > 0
+              each data, index in resData.organization.organization
+                tr
+                  td= index + 1
+                  td= data.organization_code
+                  td= data.organization_name
+                  td(style=`color: ${data.status == '1' ? 'green' : 'red'}`) #{(data.status == '1' ? 'Active' : 'InActive' )}
+                  td
+                    div
+                      span.options
+                        i.fas.fa-edit(onclick=`organizationEditPopup('${JSON.stringify(data)}')`)
+                  td
+                    div
+                      span.options
+                        i.fas.fa-trash-alt(onclick=`organizationInfo('${data._id}', 'delete')`)
+            else
+              td(colspan="9" style="text-align:center") No Data Found
+    div#pagination
+      if totalPages > 0
+        nav(data-pagination='')
+          a(href=`/organization?page=${currentPage - 1}`) Previous
+            i.ion-chevron-left
+          ul
+            each page in Array.from(Array(totalPages).keys()).map(i => i + 1)
+              li.current(class=page === currentPage ? 'active' : '')
+                a(href=`/organization?page=${page}`)= page
+          if currentPage < totalPages
+            a(href=`/organization?page=${currentPage + 1}`) Next
+              i.ion-chevron-right
+    #openOrganizationAddModal.modal.fade.modal-align-mobile-bottom.show(style='display: none;')
+      .modal-dialog.modal-dialog-lg.modal-dialog-center
+        .modal-content
+          .modal-header
+            button.modal-close(type='button' id='closePopup1' onclick='closePopUp(openOrganizationAddModal)')
+              span.sr-only close
+          .modal-body
+            form(id="form-question")
+              div#step-1-form.step-1-form
+                h2.heading-xlarge.text-center Organization details
+                br  
+                .mobile-scroll-popup
+                  .row
+                    .col-md-6
+                      .form-group.focused
+                        label(for='organization_code') Organization Code:
+                        input#organizationCode(type='text' name='organization_code' required='' class="form-control")
+                    .col-md-6
+                      .form-group.focused
+                        label(for='organization_name') Organization Name:
+                        input#organizationName(type='text' name='organization_name'  required='' class="form-control")
+                    .col-md-6.text-center
+                      button.button.button--large.button--blue.button--mobile(type='button', id='organizationDetails' onclick='submitOrganizationDetails()')
+                        span Continue
+    #editOrganizationModal.modal.fade.modal-align-mobile-bottom.show(style='display: none;')
+      .modal-dialog.modal-dialog-lg.modal-dialog-center
+        .modal-content
+          .modal-header
+            button.modal-close(type='button' id='closePopup1' onclick='closePopUp(editOrganizationModal)')
+              span.sr-only close
+          .modal-body
+            form(id="form-question")
+              div#step-1-form.step-1-form
+                h2.heading-xlarge.text-center Edit Organization details
+                br  
+                .mobile-scroll-popup
+                  .row
+                    .col-md-6
+                      .form-group.focused
+                        label(for='edit_organization_code') Organization Code:
+                        input#editOrganizationCode(type='text' name='edit_organization_code' disabled class="form-control")
+                    .col-md-6
+                      .form-group.focused
+                        label(for='edit_organization_name') Organization Name:
+                        input#editOrganizationName(type='text' name='edit_organization_name'  required='' class="form-control")
+                    .col-md-6
+                      .form-group.focused 
+                        label(for='organizationStatus') Select Status:
+                        select#organizationStatus(name='status' class='custom-select form-control')
+                          option(value="1")= "Active"
+                          option(value="0")= "InActive"
+                  .col-md-6.text-center
+                    button.button.button--large.button--blue.button--mobile(type='button', id='organizationEdit' onclick='editOrganizationDetails()')
+                      span Continue
+script(src='cms/main.js')

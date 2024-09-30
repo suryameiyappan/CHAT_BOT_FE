@@ -1,0 +1,136 @@
+include ./common/layout
+include ./common/new_modal
+include ./common/new_form
+include ./common/select-box
+include ./common/pagination-css
+section.header
+  include ./common/header
+section.main
+  include ./common/nav-bar
+  .main--container
+    div.add_button
+      .row
+        .col-md-3
+          .form-group.focused
+            label(for='searchOrganizationCode') Select Organization:
+            select#searchOrganizationCode(name='organization' class='custom-select form-control' onchange='qmSearchOrganizationCode(event, searchProductCode)')
+              option(value='') -----Select Organization-----
+              each option in resData.organization
+                option(value=option._id)= option.organization_name
+        .col-md-3
+          .form-group.focused
+            label(for='searchProductCode') Select Product:
+            select#searchProductCode(name='product' class='custom-select form-control')
+              option(value='') -----Select Product-----
+        .col-md-2
+          button(type='button' id='searchQuestion' onclick='getLangauges()')
+            | Search
+        .col-md-2
+          button(type='button' id='openQuestionModel' onclick='openLanguage()')
+            | ADD LANGUAGES
+    .table
+      .section--title
+        div
+          table(id="LanguageTable")
+            thead
+              tr
+                th S.No
+                th Organization
+                th Product
+                th Language Code
+                th Language Name
+                th Status
+                th Edit
+                th Delete
+            tbody(id="languageTableBody")
+              if resData.langauges.length > 0
+                each data, index in resData.langauges
+                  tr
+                    td= index + 1
+                    td= data.organization_code
+                    td= data.product_code
+                    td= data.language
+                    td= data.language_name
+                    td(style=`color: ${data.status == '1' ? 'green' : 'red'}`) #{(data.status == '1' ? 'Active' : 'InActive' )}
+                    td
+                      div
+                        span.options
+                          i.fas.fa-edit(onclick=`languageEditPopup('${JSON.stringify(data)}')`)
+                    td
+                      div
+                        span.options
+                          i.fas.fa-trash-alt(onclick=`languageInfo('${data._id}', 'delete')`)
+              else
+                td(colspan="9" style="text-align:center") No Data Found
+    div#pagination
+      if totalPages > 0
+        nav(data-pagination='')
+          a(href=`/language?page=${currentPage - 1}`) Previous
+            i.ion-chevron-left
+          ul
+            each page in Array.from(Array(totalPages).keys()).map(i => i + 1)
+              li.current(class=page === currentPage ? 'active' : '')
+                a(href=`/language?page=${page}`)= page
+          if currentPage < totalPages
+            a(href=`/language?page=${currentPage + 1}`) Next
+              i.ion-chevron-right
+    #openLanguageAddModal.modal.fade.modal-align-mobile-bottom.show(style='display: none;')
+      .modal-dialog.modal-dialog-lg.modal-dialog-center
+        .modal-content
+          .modal-header
+            button.modal-close(type='button' id='closePopup1' onclick='closePopUp(openLanguageAddModal)')
+              span.sr-only close
+          .modal-body
+            form(id="form-question")
+              div#step-1-form.step-1-form
+                h2.heading-xlarge.text-center Language Details
+                br  
+                .mobile-scroll-popup
+                  .row
+                    .col-md-6
+                      .form-group.focused 
+                        label(for='organizationCode') Select Organization:
+                        select#organizationCode(name='dropdown' class='custom-select form-control' onchange='qmSearchOrganizationCode(event, productCode)')
+                          option(value='') -----Select Organization-----
+                          each option in resData.organization
+                            option(value=option._id)= option.organization_name
+                    .col-md-6
+                      .form-group.focused
+                        label(for='productCode') Select Product:
+                        select#productCode(name='dropdown' class="form-control")
+                          option(value='') -----Select Product-----
+                    .col-md-6
+                      .form-group.focused
+                        label(for='dynamic') 
+                        select#dynamic(name='dynamic'  multiple data-multi-select)
+                  .row.button_qa_custom_two
+                    .button_custom_two
+                      button.button.button--large.button--blue.button--mobile(type='button', id='languageDetails', onclick='submitLanguageDetails()')
+                        span Continue
+    #editLanguageModal.modal.fade.modal-align-mobile-bottom.show(style='display: none;')
+      .modal-dialog.modal-dialog-sl.modal-dialog-center
+        .modal-content
+          .modal-header
+            button.modal-close(type='button' id='closePopup1' onclick='closePopUp(editLanguageModal)')
+              span.sr-only close
+          .modal-body
+            form(id="form-question")
+              div#step-1-form.step-1-form
+                h2.heading-xlarge.text-center Edit Language Details
+                br  
+                .mobile-scroll-popup
+                  .row
+                    .col-md-6
+                      .form-group.focused 
+                        label(for='languageStatus') Select Status:
+                        select#languageStatus(name='languageStatus' class='custom-select form-control')
+                          option(value="1") Active
+                          option(value="0") InActive
+                  .row.button_qa_custom_two
+                    .button_custom_two
+                      button.button.button--large.button--blue.button--mobile(type='button', id='languageEditDetail', onclick='editLanguageDetails()')
+                        span Continue
+script(src='cms/select-module.js')
+script(src='cms/main.js')
+
+

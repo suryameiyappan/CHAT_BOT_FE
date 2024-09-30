@@ -1,0 +1,27 @@
+html
+  head
+    title ChatBot
+    script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
+  body
+    if resData == 'success'
+      script.
+        Swal.fire({
+          title: 'Verification Successful!',
+          text: 'User verified successfully.',
+          icon: 'success',
+          showConfirmButton: false,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          allowEnterKey: false
+        });
+    else
+      script.
+        Swal.fire({
+          title: 'Invalid URL',
+          text: 'Invalid URL or URL expired!.',
+          icon: 'error',
+          showConfirmButton: false,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          allowEnterKey: false
+        });

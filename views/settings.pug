@@ -1,0 +1,61 @@
+include ./common/layout
+include ./common/new_modal
+include ./common/new_form
+section.header
+  include ./common/header
+section.main
+  include ./common/nav-bar
+  .main--container
+    div.add_button
+      button(type='button' id='openModel' onclick='openProduct()')
+        | ADD PRODUCTS
+    br
+    .table
+      .section--title
+        div
+      table
+        thead
+          tr
+            th S.No
+            th Product Code
+            th Product Name
+            th Status
+        each data, index in products
+          tr
+            td= index + 1
+            td= data.product_code
+            td= data.product_name
+            td= data.status
+    #openProductAddModal.modal.fade.modal-align-mobile-bottom.show(style='display: none;')
+      .modal-dialog.modal-dialog-lg.modal-dialog-center
+        .modal-content
+          .modal-header
+            button.modal-close(type='button' id='closePopup1' onclick='closePopUp(openProductAddModal)')
+              span.sr-only close
+          .modal-body
+            form(id="form-question")
+              div#step-1-form.step-1-form
+                h2.heading-xlarge.text-center Product Details
+                br  
+                .mobile-scroll-popup
+                  .row
+                    .col-md-6
+                      .form-group.focused
+                        label(for='organization_code') Product Code:
+                        input#productCode(type='text' name='product_code' required='' class="form-control")
+                    .col-md-6
+                      .form-group.focused
+                        label(for='organization_name') Product Name:
+                        input#productName(type='text' name='product_name'  required='' class="form-control")
+                    .col-md-6
+                      .form-group.focused 
+                        label(for='organizationCode') Select Organization:
+                        select#organizationCode(name='dropdown' class='custom-select form-control')
+                          each option in organization
+                            option(value=option._id)= option.organization_name
+                  .row.button_qa_custom_two
+                    .button_custom_two
+                      button.button.button--large.button--blue.button--mobile(type='button', id='productDetails', onclick='submitProductDetails()')
+                        span Continue
+script(src='cms/main.js')
+

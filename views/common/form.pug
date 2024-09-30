@@ -1,0 +1,82 @@
+style.
+  /* Form Styling */
+  form {
+    display: grid;
+    grid-gap: 10px;
+  }
+
+  label {
+    font-weight: bold;
+  }
+
+  .edit-qa-button {
+    display: flex;
+    margin-bottom: 0px;
+    align-items: stretch;
+    flex-direction: row-reverse;
+  }
+
+  input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #45a049;
+  }
+
+  /* Close button */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .submit_button button {
+    background-color: #ffcb08; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .custom-select {
+    width: 60%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    -webkit-appearance: none; /* Remove default arrow */
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M7 10l5 5 5-5z"/></svg>'); /* Add custom arrow */
+    background-repeat: no-repeat;
+    background-position: right 8px top 50%;
+    background-size: 20px;
+  }
+
+  /* Custom Select Box on Focus */
+  .custom-select:focus {
+    border-color: #007bff; /* Add focus style */
+  }
+
+  /* Custom Select Box Arrow on Focus */
+  .custom-select:focus::-ms-expand {
+    display: none; /* Hide default arrow on focus in IE 11 */
+  }

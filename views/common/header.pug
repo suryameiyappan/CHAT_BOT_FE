@@ -1,0 +1,17 @@
+.logo
+  //- i.ri-menu-line.menu
+  p.header-text CHAT BOT CMS
+.logo_header
+    //- img(src='/cms/image/logo.svg' alt='')
+.header--items
+  i.ri-search-2-line
+  .dark--theme--btn
+    i.ri-moon-line.moon
+    i.ri-sun-line.sun
+  i.ri-notification-2-line
+  i.ri-wechat-2-line.chat
+  .profile
+    if profileImage.url != ''
+      img(src=`http://product-service-be.dv/uploads/user/profile/${profileImage.user_id}/${profileImage.url}` alt='User Profile Image')
+    else
+      img(src='/cms/image/profile-2.jpg' width='20' height='10px' alt='User Profile Avatar')

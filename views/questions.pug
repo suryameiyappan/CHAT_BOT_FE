@@ -1,0 +1,292 @@
+include ./common/layout
+include ./common/new_modal
+include ./common/new_form
+include ./common/pagination-css
+section.header
+  include ./common/header
+section.main
+  include ./common/nav-bar
+  .main--container
+    div.add_button
+      .row
+        .col-md-3
+          .form-group.focused
+            label(for='searchOrganizationCode') Select Organization:
+            select#searchOrganizationCode(name='dropdown' class='custom-select form-control' onchange='qmSearchOrganizationCode(event, searchProductCode)')
+              option(value='') -----Select Organization-----
+              each option in organization
+                option(value=option._id)= option.organization_name
+        .col-md-3
+          .form-group.focused
+            label(for='searchProductCode') Select Product:
+            select#searchProductCode(name='dropdown' class='custom-select form-control')
+              option(value='') -----Select Product-----
+        .col-md-2
+          button(type='button' id='searchQuestion' onclick='getQuestion()')
+            | Search
+        .col-md-2
+          button(type='button' id='openQuestionModel' onclick='openQuestionPopup()')
+            | ADD QUESTIONS
+    .table
+      .section--title
+          table(id="questionsTable")
+            thead
+              tr
+                th S.No
+                th Organization
+                th Product
+                th Type
+                th Language
+                th question
+                th Status
+                th Edit
+                th Delete
+            tbody(id="questionsTableBody")
+              if questions.length > 0
+                each question, index in questions
+                  tr
+                    td= index + 1
+                    td= question.organization_code
+                    td= question.product_code
+                    td= question.question_type
+                    td= question.language
+                    td
+                      button(type='button' id='show_questions_'+(index + 1) class='show_questions' onclick=`openQuestion('${JSON.stringify(question.question)}')`) Show Question
+                    td(style=`color: ${question.status == '1' ? 'green' : 'red'}`) #{(question.status == '1' ? 'Active' : 'InActive' )}
+                    td
+                      div
+                        span.options
+                          i.fas.fa-edit(onclick=`questionEditPopup('${JSON.stringify(question)}')`)
+                    td
+                      div
+                        span.options
+                          i.fas.fa-trash-alt(onclick=`questionInfo('${question._id}', 'delete')`)
+              else
+                td(colspan="9" style="text-align:center") No Data Found
+    div#pagination
+      if totalPages > 0
+        nav(data-pagination='')
+          a(href=`/questions?page=${currentPage - 1}`) Previous
+            i.ion-chevron-left
+          ul
+            each page in Array.from(Array(totalPages).keys()).map(i => i + 1)
+              li.current(class=page === currentPage ? 'active' : '')
+                a(href=`/questions?page=${page}`)= page
+          if currentPage < totalPages
+            a(href=`/questions?page=${currentPage + 1}`) Next
+            i.ion-chevron-right
+    #GetQuoteForm.modal.fade.modal-align-mobile-bottom.show(style='display: none;')
+      .modal-dialog.modal-dialog-lg.modal-dialog-center
+        .modal-content
+          .modal-header
+            button.modal-close(type='button' id='closePopup1' onclick='closePopUp(GetQuoteForm)')
+              span.sr-only close
+          .modal-body
+            form#qaForm
+              div#step-1-form.step-1-form
+                h2.heading-xlarge.text-center Organization Details
+                br
+                .mobile-scroll-popup
+                  .row
+                    .col-md-6
+                      .form-group.focused
+                        label(for='organizationCode') Select Organization:
+                        select#organizationCode(name='dropdown' class="form-control" onchange='qmSearchOrganizationCode(event, productCode, "questionPage")')
+                          option(value='') -----Select Organization-----
+                          each option in organization
+                            option(value=option._id)= option.organization_name
+                    .col-md-6
+                      .form-group.focused
+                        label(for='productCode') Select Product:
+                        select#productCode(name='dropdown' class="form-control")
+                          option(value="") -----Select Product-----
+                    .col-md-12.text-center
+                      button.button.button--large.button--blue.button--mobile(type='button', id='step-1', onclick='questionStepOne()')
+                        span Continue
+              div#step-2-form.step-2-form
+                h2.heading-xlarge.text-center Question Details
+                br 
+                .mobile-scroll-popup
+                  .row.new_row
+                    .col-md-4
+                      .form-group.focused
+                        label(for='qaLanguage') Language:
+                        select#qaLanguage(name='qa_language' class='custom-select form-control' disabled=true)
+                    .col-md-3
+                      .form-group.focused
+                        label(for='qaInputType') Input Type:
+                        select#qaInputType(name='qainputtype' class='custom-select form-control' onchange='inputTypeChange()')
+                          option(value='') Select Input Type
+                          option(value='inputBox') INPUT
+                          option(value='radio') RADIO
+                    .col-md-2.input-group.hidden.input-radio
+                      .form-group
+                        button.button.button--large.button--blue.button--mobile(type='button', id='addRadioButton' onclick='radioButton()')
+                          span Add
+                    .col-md-12.remove_value
+                      .form-group.focused
+                        label(for='QuestionText') Question:
+                        textarea#QuestionText(name='QuestionText' rows="4" cols="100" class="form-control-q-pad")
+                    .col-md-6.input-group.hidden.input-inputBox.remove_value
+                      .form-group.focused
+                        label(for='min_length') Min Leangth:
+                        input#minLength(type='text' name='min_length' class="form-control")
+                    .col-md-6.input-group.hidden.input-inputBox.remove_value
+                      .form-group.focused
+                        label(for='min_length_err') Min Leangth Error:
+                        input#minLengthErr(type='text' name='min_length_err' class="form-control")
+                    .col-md-6.input-group.hidden.input-inputBox.remove_value
+                      .form-group.focused
+                        label(for='max_length ') Max Leangth:
+                        input#maxLength(type='text' name='max_length' class="form-control")
+                    .col-md-6.input-group.hidden.input-inputBox.remove_value
+                      .form-group.focused
+                        label(for='max_length_err') Max Leangth Error:
+                        input#maxLengthErr(type='text' name='max_length_err' class="form-control")
+                    .col-md-6.input-group.hidden.input-inputBox.remove_value
+                      .form-group.focused
+                        label(for='validationType') Validation Type:
+                        select#validationType(name='dropdown' class='custom-select form-control')
+                          option(value='') Select Validation Type
+                          option(value='alphaValidation') Alpha Only
+                          option(value='numericValidation') Numeric Validation
+                    .col-md-6.input-group.hidden.input-inputBox.remove_value
+                      .form-group.focused
+                        label(for='regex') Regex:
+                        input#regex(type='text' name='regex' class="form-control")
+                    .col-md-6.input-group.hidden.input-inputBox.remove_value
+                      .form-group.focused
+                        label(for='regex_err') Regex Error:
+                        input#regexErr(type='text' name='regex_err' class="form-control")
+                    .col-md-6.input-group.hidden.input-inputBox.remove_value
+                      .form-group.focused
+                        label(for='required_err') Required Error:
+                        input#RequiredErr(type='text' name='required_err' class="form-control")
+                    .col-md-6.input-group.hidden.input-inputBox.remove_value
+                      .form-group.focused
+                        label(for='placeHolder') placeHolder:
+                        input#placeHolder(type='text' name='placeHolder' class="form-control")
+                    .col-md-6.input-group.hidden.input-inputBox.remove_value
+                      .form-group.focused
+                        label(for='validationType') AutoComplete:
+                        select#autoComplete(name='dropdown' class='custom-select form-control')
+                          option(value='off') Off
+                          option(value='on') on
+                    .col-md-6.input-group.hidden.input-radio.radio_0.remove_value
+                      .form-group.focused
+                        label(for='OptionText') Option:
+                        textarea#OptionText(name='OptionText' rows="4" cols="50" class="form-control")
+                    .col-md-6.input-group.hidden.input-radio.radio_0.remove_value
+                      .form-group.focused
+                        label(for='OptionTitle') Option title:
+                        textarea#OptionTitle(name='OptionTitle' rows="4" cols="50" class="form-control")
+                  .row.button_qa_custom_two
+                    .button_custom_two
+                      button.button.button--large.button--blue.button--mobile(type='button', id='add_questions_array', onclick='addQuestionArray()')
+                        span Continue
+                      button.button.button--large.button--blue.button--mobile(type='button', id='step-2', onclick='questionSave()' disabled=true)
+                        span Submit
+    #openQuestions.modal.fade.modal-align-mobile-bottom.show(style='display: none;')
+      .modal-dialog.modal-dialog-lg.modal-dialog-center
+        .modal-content
+          .modal-header
+            button.modal-close(type='button' id='closePopup2' onclick='closePopUp(openQuestions)')
+              span.sr-only close
+          .modal-body
+            div#question-show
+              h2#questionTxt.heading-xlarge.text-center.json-format
+    #editQuoteForm.modal.fade.modal-align-mobile-bottom.show(style='display: none;')
+      .modal-dialog.modal-dialog-lg.modal-dialog-center
+        .modal-content
+          .modal-header
+            button.modal-close(type='button' id='closePopup1' onclick='closePopUp(editQuoteForm)')
+              span.sr-only close
+          .modal-body
+            form#qaEditForm
+              div
+                h2.heading-xlarge.text-center Edit Question Details
+                br 
+                .mobile-scroll-popup
+                  .row.edit_new_row
+                    .col-md-6
+                      .form-group.focused
+                        label(for='editOrganizationCode') Organization Code:
+                        input#editOrganizationCode(type='text' name='edit_organization' class="form-control" disabled=true)
+                    .col-md-6
+                      .form-group.focused
+                        label(for='editProductCode') Product Code:
+                        input#editProductCode(type='text' name='edit_product' class="form-control" disabled=true)
+                    .col-md-4
+                      .form-group.focused
+                        label(for='editQaLanguage') Language:
+                        input#editQaLanguage(type='text' name='edit_qa_language' class="form-control" disabled=true)
+                    .col-md-3
+                      .form-group.focused
+                        label(for='editQaInputType') Input Type:
+                        input#editQaInputType(type='text' name='edit_qa_language' class="form-control" disabled=true)
+                    .col-md-2.edit-input-group.edit-hidden.edit-input-radio
+                      .form-group
+                        button.button.button--large.button--blue.button--mobile(type='button', id='editRadioButton' onclick="radioButton('edit-')")
+                          span Add
+                    .col-md-12.remove_value
+                      .form-group.focused
+                        label(for='editQuestionText') Question:
+                        textarea#editQuestionText(name='editQuestionText' rows="4" cols="100" class="form-control-q-pad")
+                    .col-md-6.edit-input-group.edit-hidden.edit-input-inputBox.edit_remove_value
+                      .form-group.focused
+                        label(for='editMinLength') Min Leangth:
+                        input#editMinLength(type='text' name='edit_min_length' class="form-control")
+                    .col-md-6.edit-input-group.edit-hidden.edit-input-inputBox.edit_remove_value
+                      .form-group.focused
+                        label(for='editMinLengthErr') Min Leangth Error:
+                        input#editMinLengthErr(type='text' name='edit_min_length_err' class="form-control")
+                    .col-md-6.edit-input-group.edit-hidden.edit-input-inputBox.edit_remove_value
+                      .form-group.focused
+                        label(for='editMaxLength') Max Leangth:
+                        input#editMaxLength(type='text' name='edit_max_length' class="form-control")
+                    .col-md-6.edit-input-group.edit-hidden.edit-input-inputBox.edit-remove_value
+                      .form-group.focused
+                        label(for='editMaxLengthErr') Max Leangth Error:
+                        input#editMaxLengthErr(type='text' name='edit_max_length_err' class="form-control")
+                    .col-md-6.edit-input-group.edit-hidden.edit-input-inputBox.edit_remove_value
+                      .form-group.focused
+                        label(for='editValidationType') Validation Type:
+                        select#editValidationType(name='dropdown' class='custom-select form-control')
+                          option(value='') Select Validation Type
+                          option(value='alphaValidation') Alpha Only
+                          option(value='numericValidation') Numeric Validation
+                    .col-md-6.edit-input-group.edit-hidden.edit-input-inputBox.edit_remove_value
+                      .form-group.focused
+                        label(for='editRegex') Regex:
+                        input#editRegex(type='text' name='editRegex' class="form-control")
+                    .col-md-6.edit-input-group.edit-hidden.edit-input-inputBox.edit_remove_value
+                      .form-group.focused
+                        label(for='editRegexErr') Regex Error:
+                        input#editRegexErr(type='text' name='edit_regex_err' class="form-control")
+                    .col-md-6.edit-input-group.edit-hidden.edit-input-inputBox.edit_remove_value
+                      .form-group.focused
+                        label(for='editRequiredErr') Required Error:
+                        input#editRequiredErr(type='text' name='edit_required_err' class="form-control")
+                    .col-md-6.edit-input-group.edit-hidden.edit-input-inputBox.edit_remove_value
+                      .form-group.focused
+                        label(for='editPlaceHolder') placeHolder:
+                        input#editPlaceHolder(type='text' name='edit_placeHolder' class="form-control")
+                    .col-md-6.edit-input-group.edit-hidden.edit-input-inputBox.edit_remove_value
+                      .form-group.focused
+                        label(for='editautoComplete') AutoComplete:
+                        select#editautoComplete(name='dropdown' class='custom-select form-control')
+                          option(value='off') Off
+                          option(value='on') on
+                    .col-md-6.edit-input-group.edit-hidden.edit-input-radio.edit-radio_0.edit_remove_value
+                      .form-group.focused
+                        label(for='editOptionText') Option:
+                        textarea#editOptionText(name='editOptionText' rows="4" cols="50" class="form-control")
+                    .col-md-6.edit-input-group.edit-hidden.edit-input-radio.edit-radio_0.edit_remove_value
+                      .form-group.focused
+                        label(for='editOptionTitle') Option title:
+                        textarea#editOptionTitle(name='editOptionTitle' rows="4" cols="50" class="form-control")
+                  .row.button_qa_custom_two
+                    .button_custom_two
+                      button.button.button--large.button--blue.button--mobile(type='button', id='updateQuestionDetail', onclick='editQuestionDetails()')
+                        span Submit
+script(src='cms/main.js')

@@ -1,0 +1,77 @@
+include ./common/layout
+section.header
+  include ./common/header
+section.main
+  include ./common/nav-bar
+  .main--container
+    .section--title
+      h3.title Welcome back, #{profileImage.username}
+      br
+      //- select#date(name='date')
+      //-   option(value='last7') Last 7 days
+      //-   option(value='lastmonth') Last month
+      //-   option(value='lastyear') Last year
+      //-   option(value='alltime') All time
+    .cards
+      .card.card-1
+        .card--title
+          span.card--icon.icon
+            i.ri-community-line
+          span Organization
+        h3.card--value
+          if resData.organization > 0 
+            | #{resData.organization}
+          else
+            | N/A
+          i.ri-arrow-up-circle-fill.up
+        h5.more #{resData.organization_active ? resData.organization_active+' organizations is active' : 'N/A' }
+        .chart
+          canvas#sales
+      .card.card-2
+        .card--title
+          span.card--icon.icon
+            i.ri-handbag-line
+          span Products
+        h3.card--value
+          if resData.product > 0 
+            | #{resData.product}
+          else
+            | N/A
+          i.ri-arrow-up-circle-fill.up
+        h5.more #{resData.product_active ? resData.product_active+' products is active' : 'N/A' } 
+        .chart
+          canvas#orders
+      .card.card-3
+        .card--title
+          span.card--icon.icon
+            i.ri-question-line
+          span Questions
+        h3.card--value
+          if resData.question > 0 
+            | #{resData.question}
+          else
+            | N/A
+          i.ri-arrow-up-circle-fill.up
+        h5.more #{resData.question_active ? resData.question_active+' questions is active' : 'N/A' }
+        .chart
+          canvas#products
+    .table
+      .section--title
+        table
+          thead
+            tr
+              th S.No
+              th Organization Name
+              th Product Name
+              th Status
+          tbody(id="dashboard-table")
+              if organization.organization.length > 0
+                each data, index in organization.organization
+                  tr
+                    td= index + 1
+                    td= data.organization_code
+                    td= data.organization_name
+                    td= data.status
+              else
+                td(colspan="9" style="text-align:center") No Data Found
+script(src='cms/main.js')

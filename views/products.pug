@@ -1,0 +1,138 @@
+include ./common/layout
+include ./common/new_modal
+include ./common/new_form
+include ./common/pagination-css
+section.header
+  include ./common/header
+section.main
+  include ./common/nav-bar
+  .main--container
+    div.add_button
+      .row
+        .col-md-3
+          .form-group.focused
+            label(for='searchOrganizationCode') Select Organization:
+            select#searchOrganization(name='organization' class='custom-select form-control')
+              option(value='') -----Select Organization-----
+              each option in organization
+                option(value=option._id)= option.organization_name
+        .col-md-2
+          button(type='button' id='searchQuestion' onclick='getProductsByOrganization()')
+            | Search
+        .col-md-2
+          button(type='button' id='openModel' onclick='openProduct()')
+            | ADD PRODUCTS
+    .table
+      .section--title
+          table
+            thead
+              tr
+                th S.No
+                th Organization Code
+                th Product Code
+                th Product Name
+                th Status
+                th Edit
+                th Delete
+            tbody(id="products-table")
+              if products.length > 0
+                each data, index in products
+                  tr
+                    td= index + 1
+                    td= data.organization_code
+                    td= data.product_code
+                    td= data.product_name
+                    td(style=`color: ${data.status == '1' ? 'green' : 'red'}`) #{(data.status == '1' ? 'Active' : 'InActive' )}
+                    td
+                      div
+                        span.options
+                          i.fas.fa-edit(onclick=`productEditPopup('${JSON.stringify(data)}')`)
+                    td
+                      div
+                        span.options
+                          i.fas.fa-trash-alt(onclick=`productInfo('${data._id}', 'delete')`)
+              else
+                td(colspan="9" style="text-align:center") No Data Found
+    div#pagination
+      if totalPages > 0 
+        nav(data-pagination='')
+          a(href=`/products?page=${currentPage - 1}`) Previous
+            i.ion-chevron-left
+          ul
+            each page in Array.from(Array(totalPages).keys()).map(i => i + 1)
+              li.current(class=page === currentPage ? 'active' : '')
+                a(href=`/products?page=${page}`)= page
+          if currentPage < totalPages
+            a(href=`/products?page=${currentPage + 1}`) Next
+              i.ion-chevron-right
+    #openProductAddModal.modal.fade.modal-align-mobile-bottom.show(style='display: none;')
+      .modal-dialog.modal-dialog-lg.modal-dialog-center
+        .modal-content
+          .modal-header
+            button.modal-close(type='button' id='closePopup1' onclick='closePopUp(openProductAddModal)')
+              span.sr-only close
+          .modal-body
+            form(id="form-question")
+              div#step-1-form.step-1-form
+                h2.heading-xlarge.text-center Product Details
+                br  
+                .mobile-scroll-popup
+                  .row
+                    .col-md-6
+                      .form-group.focused 
+                        label(for='organizationCode') Select Organization:
+                        select#organizationCode(name='dropdown' class='custom-select form-control')
+                          option(value='') -----Select Organization-----
+                          each option in organization
+                            option(value=option._id)= option.organization_name
+                    .col-md-6
+                      .form-group.focused
+                        label(for='organization_code') Product Code:
+                        input#productCode(type='text' name='product_code' required='' class="form-control")
+                    .col-md-6
+                      .form-group.focused
+                        label(for='organization_name') Product Name:
+                        input#productName(type='text' name='product_name'  required='' class="form-control")
+                  .row.button_qa_custom_two
+                    .button_custom_two
+                      button.button.button--large.button--blue.button--mobile(type='button', id='productDetails', onclick='submitProductDetails()')
+                        span Continue
+    #editProductModal.modal.fade.modal-align-mobile-bottom.show(style='display: none;')
+      .modal-dialog.modal-dialog-lg.modal-dialog-center
+        .modal-content
+          .modal-header
+            button.modal-close(type='button' id='closePopup1' onclick='closePopUp(editProductModal)')
+              span.sr-only close
+          .modal-body
+            form(id="form-question")
+              div#step-1-form.step-1-form
+                h2.heading-xlarge.text-center Edit Product Details
+                br  
+                .mobile-scroll-popup
+                  .row
+                    .col-md-6
+                      .form-group.focused 
+                        label(for='editOrganizationCode') Select Organization:
+                        select#editOrganizationCode(name='dropdown' class='custom-select form-control' disabled)
+                          each option in organization
+                            option(value=option._id)= option.organization_name
+                    .col-md-6
+                      .form-group.focused
+                        label(for='editProductCode') Product Code:
+                        input#editProductCode(type='text' name='edit_product_code' required='' class="form-control")
+                    .col-md-6
+                      .form-group.focused
+                        label(for='editProductName') Product Name:
+                        input#editProductName(type='text' name='edit_product_name'  required='' class="form-control")
+                    .col-md-6
+                      .form-group.focused 
+                        label(for='ProductStatus') Select Status:
+                        select#ProductStatus(name='status' class='custom-select form-control')
+                          option(value="1")= "Active"
+                          option(value="0")= "InActive"
+                  .row.button_qa_custom_two
+                    .button_custom_two
+                      button.button.button--large.button--blue.button--mobile(type='button', id='editProductDetail', onclick='editProductDetails()')
+                        span Continue
+script(src='cms/main.js')
+
