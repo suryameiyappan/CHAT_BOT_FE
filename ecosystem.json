@@ -1,0 +1,31 @@
+{
+  "apps": [
+    {
+      "name": "CHATBOT-FE",
+      "script": "bin/www",
+      "instances": "max",
+      "exec_mode": "cluster",
+      "watch": false,
+      "append_env_to_name": false,
+      "env_local": {
+        "NODE_ENV": "development",
+        "PORT": 6008
+      },
+      "env_sit": {
+        "NODE_ENV": "sit",
+        "PORT": 3006
+      },
+      "env_uat": {
+        "NODE_ENV": "uat",
+        "PORT": 4001
+      },
+      "env_production": {
+        "NODE_ENV": "production",
+        "PORT": 5000
+      }
+    }
+  ],
+  "deploy": {
+    "post-deploy": "pm2 startOrReload ecosystem.json --env production && pm2 save"
+  }
+}
