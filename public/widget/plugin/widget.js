@@ -156,7 +156,6 @@ widget.global = {
     sendBtn.textContent = "send";
     chatInputDiv.appendChild(sendBtn);
     chatbotContainer.appendChild(chatInputDiv);
-    this.powerdByFooter();
     this.languageEvent();
   },
   powerdByFooter: function powerdByFooter() {
